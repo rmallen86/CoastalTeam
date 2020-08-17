@@ -31,6 +31,7 @@ Created on Mon Aug 17 2020
     % FLX: updated sediment flux through open boundary
 """
 import numpy as np
+import excludeboundarycell
 
 def sedtran(d, A, DiffS, h, ho, E, WS, dx, dt, rbulk, co, Ux, Uy, FLX, fTide, Ttide):
     
@@ -56,4 +57,8 @@ def sedtran(d, A, DiffS, h, ho, E, WS, dx, dt, rbulk, co, Ux, Uy, FLX, fTide, Tt
     
     # the factor 24*3600 is used to convert the Ux and Uy from m/s to m/day
     
-    [row, col] = ind2sub
+    [row, col] = np.unravel_index(p, size(A))
+    for k in [N -1 1 -N]:
+        [a, q] = exludeboundarycell(k, N, M, p)
+        
+        a =a[A[q]]
