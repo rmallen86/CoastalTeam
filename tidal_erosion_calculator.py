@@ -78,7 +78,7 @@ def map_node2cell_addGrid(grid,var1,var2): #takes a grid, plus the variable you 
     a = grid.map_node_to_cell(var1)
     return grid.add_field(var2, a, at='cell')
     
-def populateGrids(grid,tfc, tau_cr, tau_crv):
+def populateGrids(grid, tfc, tau_cr, tau_crv, veg):
     rate = tfc.calc_tidal_inundation_rate()
     grid.add_field('tidal_innundation_rate',rate,at = 'node',units='m/s')
     map_node2cell_addGrid(grid,rate,'tidal_innundation_rate_cell')
@@ -109,7 +109,8 @@ def populateGrids(grid,tfc, tau_cr, tau_crv):
     map_node2cell_addGrid(grid,lev_an,'lev_at_cell')
 
     taucr = grid.add_zeros('tau_cr',at='link') + tau_cr
-    taucr[veg_atlink==1] = tau_crv
+    #v = grid.at_link['veg_atlink'] #this is not working and I have NO IDEA WHY
+    taucr[veg==1] = tau_crv
     map_node2cell_addGrid(grid,taucr,'tau_cr_cell')
     
     ebb = grid.at_link['ebb_tide_flow__velocity']
