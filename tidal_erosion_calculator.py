@@ -148,14 +148,15 @@ def totalsedimenterosion_mudsine(grid, mud_erodability):
     fupeak = np.pi/2
     #total sed erosion for loop
     ntdcy = 10 #number of tidal cycles
-    E = grid.add_zeros('Erosion',at = 'node')
     taucr = grid.at_node['tau_cr_node']
+    E = np.zeros(taucr.size)
     
     # get rid of for loop
     #for i in range(ntdcy):
     utide = grid.at_node['flood_tide_flow__velocity_node']*fupeak*np.sin(np.pi/2) #intra-tidal velocity
     tauC = 1025*9.81* grid.at_node['roughness_node']**2 * utide**2 * grid.at_node['water_depth_at_node']**(-1/3)
     E += mud_erodability*(np.sqrt(1+(tauC/taucr)**2)-1)
+    return E
     
 def totalsedimenterosion_mudsine_link(grid, mud_erodability):
 
