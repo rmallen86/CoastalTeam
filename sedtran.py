@@ -32,7 +32,7 @@ Created on Mon Aug 17 2020
 """
 import numpy as np
 import scipy.io as spio
-import excludeboundarycell
+#import excludeboundarycell
 
 def sedtran(d, A, DiffS, h, ho, E, WS, dx, dt, rbulk, co, Ux, Uy, FLX, fTide, Ttide):
     
@@ -61,14 +61,19 @@ def sedtran(d, A, DiffS, h, ho, E, WS, dx, dt, rbulk, co, Ux, Uy, FLX, fTide, Tt
     
     # Eliminate the cells in which the water depth is too small
     find_A = np.argwhere(ho<=0)
-    A[find_A[:,0],find_A[:,1]]= 0 # this indexing doesn't quite work
+    A[find_A[:,0],find_A[:,1]]= 0 # this indexing doesn't quite work    
     
     # rivermouthfront
-    
-    p = np.argwhere(A>0); # exclude the no land cells
+    p = np.argwhere(A.flatten(order='F')>0)
     G = 0*d
+    G_shape = np.shape(G)
     NN=len(p)
-    G[p[:,0],p[:,1]] = np.arange(1,NN+1)
+    G2 = G.flatten(order='F')
+    p2 = np.arange(1,NN+1)
+    p3 = p2.reshape((86628,1))
+    G2[p] = p3
+    G = G2.reshape(G_shape,order='F')
+    
     rhp = E[p] # in the rhs there is already the addition of the erosion input
     [N, M] = size(G)
     i =(); j=();s=();S=0*G;
