@@ -2,7 +2,7 @@ Tides on a randomly vegetated field
 -----------------------------------
 
 In this notebook we will be running the
-`Landlab <http://landlab.github.io/#/>`__ tidal-flow-calculator over a
+`Landlab <https://landlab.github.io/#/>`__ tidal-flow-calculator over a
 randomly generated field of vegetation (simulated by 2 Mannings
 Roughness values) and looking at how passive particle transport is
 impacted by the spatial distribution of plants.
@@ -30,14 +30,14 @@ tidal-flow-calculator.
 
 To build random fields of different characteristic length scales, we
 will use the geostatistical toolbox
-`GSTools <https://github.com/GeoStat-Framework/GSTools>`__. To install
+`GSTools <https://geostat-framework.github.io/>`__. To install
 this package, the command ``conda install gstools`` can be run from the
 command line. In this example we will be using a standard covariance
 model for random field generation.
 
 Lastly, to simulate passive particle transport we will use the
 Lagrangian-based transport model
-`dorado <https://github.com/passaH2O/dorado>`__. To install dorado we
+`dorado <https://passah2o.github.io/dorado/>`__. To install dorado we
 can type ``pip install pydorado`` from the command line.
 
 .. code:: ipython3
