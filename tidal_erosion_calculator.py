@@ -1,4 +1,9 @@
-from landlab.grid.mappers import map_link_vector_components_to_node
+"""
+Total sediment erosion (assumes limitless supply)
+Based on totalsedimenterosionmudsine.m by Giulio Mariotti 
+Includes some code based on G. Tucker tidal_flow_calculator.py in landlab component
+Does not incorporate averaging over multiple tidal cycles or linear increase in critical shear stress with depth
+"""
 
 # imports
 import numpy as np
@@ -6,8 +11,8 @@ import matplotlib.pyplot as plt
 from landlab import RasterModelGrid, imshow_grid
 from landlab.components import TidalFlowCalculator
 from landlab.io import read_esri_ascii
-from landlab.grid.mappers import map_max_of_link_nodes_to_link
-from landlab.grid.mappers import map_node_to_cell
+from landlab.grid.mappers import map_max_of_link_nodes_to_link, map_node_to_cell, map_link_vector_components_to_node, map_max_of_node_links_to_node
+
 
 def map_velocity_components_to_nodes(grid):
     """Map the velocity components from the links to the nodes, and return the node arrays."""
@@ -78,6 +83,11 @@ def map_node2cell_addGrid(grid,var1,var2): #takes a grid, plus the variable you 
     a = grid.map_node_to_cell(var1)
     return grid.add_field(var2, a, at='cell')
     
+def map_link2cell_addGrid(grid,var1,var2): #takes a grid, plus the variable you want to map to cell, and the string name
+    a = grid.map_max_of_node_links_to_node(var1)
+    b = grid.map_node_to_cell(a)
+    return grid.add_field(var2, b, at='cell')
+    
 def populateGrids(grid, tfc, tau_cr, tau_crv, veg):
     rate = tfc.calc_tidal_inundation_rate()
     grid.add_field('tidal_innundation_rate',rate,at = 'node',units='m/s')
@@ -109,14 +119,55 @@ def populateGrids(grid, tfc, tau_cr, tau_crv, veg):
     map_node2cell_addGrid(grid,lev_an,'lev_at_cell')
 
     taucr = grid.add_zeros('tau_cr',at='link') + tau_cr
-    #v = grid.at_link['veg_atlink'] #this is not working and I have NO IDEA WHY
-    taucr[veg==1] = tau_crv
-    map_node2cell_addGrid(grid,taucr,'tau_cr_cell')
+    v = grid.at_link['veg_atlink'] 
+    taucr[v==1] = tau_crv
+    taucr_node = grid.map_max_of_node_links_to_node(taucr)
+    grid.add_field('tau_cr_node',taucr_node,at='node')
+    map_link2cell_addGrid(grid,taucr,'tau_cr_cell')
     
     ebb = grid.at_link['ebb_tide_flow__velocity']
+    ebb_node = grid.map_max_of_node_links_to_node(ebb)
+    grid.add_field('ebb_tide_flow__velocity_node',ebb_node,at='node')
+    grid.add_field('flood_tide_flow__velocity_node',-ebb_node,at='node')
     map_node2cell_addGrid(grid,ebb,'ebb_tide_flow__velocity_cell')
     map_node2cell_addGrid(grid,-ebb,'flood_tide_flow__velocity_cell')
     
-    grid.add_field('water_depth_at_link',tfc._water_depth_at_links,at = 'link',units='m')
-    map_node2cell_addGrid(grid,tfc._water_depth_at_links,'water_depth_at_cell')
+    rough = grid.at_link['roughness']
+    rough_node = grid.map_max_of_node_links_to_node(rough)
+    grid.add_field('roughness_node',rough_node,at='node')
+    map_link2cell_addGrid(grid,rough,'roughness_cell')
     
+    grid.add_field('water_depth_at_link',tfc._water_depth_at_links,at = 'link',units='m')
+    wd = tfc._water_depth_at_links
+    wd_node = grid.map_max_of_node_links_to_node(wd)
+    grid.add_field('water_depth_at_node',wd_node,at='node')
+    map_link2cell_addGrid(grid,tfc._water_depth_at_links,'water_depth_at_cell')
+
+def totalsedimenterosion_mudsine(grid, mud_erodability):
+
+    fupeak = np.pi/2
+    #total sed erosion for loop
+    ntdcy = 10 #number of tidal cycles
+    E = grid.add_zeros('Erosion',at = 'node')
+    taucr = grid.at_node['tau_cr_node']
+    
+    # get rid of for loop
+    #for i in range(ntdcy):
+    utide = grid.at_node['flood_tide_flow__velocity_node']*fupeak*np.sin(np.pi/2) #intra-tidal velocity
+    tauC = 1025*9.81* grid.at_node['roughness_node']**2 * utide**2 * grid.at_node['water_depth_at_node']**(-1/3)
+    E += mud_erodability*(np.sqrt(1+(tauC/taucr)**2)-1)
+    
+def totalsedimenterosion_mudsine_link(grid, mud_erodability):
+
+    fupeak = np.pi/2
+    #total sed erosion for loop
+    ntdcy = 10 #number of tidal cycles
+    E = grid.add_zeros('Erosion',at = 'cell')
+    taucr = grid.at_cell['tau_cr_cell']
+    
+    # get rid of for loop
+    #for i in range(ntdcy):
+    utide = grid.at_cell['flood_tide_flow__velocity_cell']*fupeak*np.sin(np.pi/2) #intra-tidal velocity
+    tauC = 1025*9.81* grid.at_cell['roughness_cell']**2 * utide**2 * grid.at_cell['water_depth_at_cell']**(-1/3)
+    E += mud_erodability*(np.sqrt(1+(tauC/taucr)**2)-1)
+    #print(max(E))
