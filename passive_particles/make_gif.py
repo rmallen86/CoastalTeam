@@ -8,11 +8,11 @@ except Exception:
 
 # first make the gif - set range based on number of output images
 images = []
-for i in range(0, 200):
+for i in range(0, 100):
     fname = str(i) + '.png'
     images.append(imageio.imread(fname))
 
-imageio.mimsave('demo.gif', images, duration=0.15)
+imageio.mimsave('demo.gif', images, duration=0.25)
 
 # then optimize it
 optimize('demo.gif')
