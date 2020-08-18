@@ -30,16 +30,21 @@ Created on Mon Aug 17 2020
     % SSM: suspended sediment mass ???
     % FLX: updated sediment flux through open boundary
 """
+
+# imports
 import numpy as np
 import scipy.io as spio
-import excludeboundarycell
+#import excludeboundarycell
 
 def sedtran(d, A, DiffS, h, ho, E, WS, dx, dt, rbulk, co, Ux, Uy, FLX, fTide, Ttide):
     
     # DELETE BELOW THIS WHEN FINISHED
 
     mat = spio.loadmat('C:/Users/colli/Documents/Python_Scripts/ESPIn/coastal/MarshMorpho2D/rightbeforeTime.mat')
-    A = mat['A']
+    A_int = mat['A']
+    A = A_int.astype(float)
+    d = np.zeros_like(A) # creates an array of zeros the shape of A (in reality this is an array of floats)
+    d = d.astype(float)
     DiffS = mat['DiffS']
     h = mat['h']
     ho = mat['ho']
@@ -56,25 +61,37 @@ def sedtran(d, A, DiffS, h, ho, E, WS, dx, dt, rbulk, co, Ux, Uy, FLX, fTide, Tt
     Ttide = mat['Ttide']
     # DELETE ABOVE THIS WHEN FINISHED
     
+    # Eliminate the cells in which the water depth is too small
     find_A = np.argwhere(ho<=0)
-    A[find_A] = 0
+    A[find_A[:,0],find_A[:,1]]= 0 # this indexing doesn't quite work    
     
     # rivermouthfront
-    
-    p = np.argwhere(A>0); # exclude the no land cells
+    p = np.argwhere(A.flatten(order='F')>0)
     G = 0*d
+    G_shape = np.shape(G)
     NN=len(p)
-    G[p] =[1:NN]
-    rhp = E[p] # in the rhs there is already the addition of the erosion input
-    [N, M] = size(G)
-    i =(); j=();s=();S=0*G;
+    G2 = G.flatten(order='F')
+    G2 = G2.astype(int)
+    p2 = np.arange(1,NN+1)
+    p3 = p2.reshape((86628,1))
+    G2[p] = p3
+    G = G2.reshape(G_shape,order='F')
+
+    E2 = E.flatten(order='F')
+    
+    rhs = E2[p] # in the rhs there is already the addition of the erosion input
+    [N, M] = np.shape(G)
+    i =np.empty(0); j=np.empty(0);s=np.empty(0);
+    S=0*G;
     
     # boundary conditions imposed SSC
-    a = np.argwhere(A==2)
-    rhs[G[a]] = co*h[a]*fTide[a]
+    a = np.argwhere(A.flatten(order='F')==2)
+    rhs_ind = G2[a]
+    rhs_ind = rhs_ind.reshape(15,)
+    rhs[rhs_ind] = co*(h.flatten(order='F')[a])*(fTide.flatten(order='F')[a])
     
-    Dxx = (DiffS*Ttide/2*(np.abs(Ux*Ux))*(24*3600)^2)*h #.*(ho>kro);%.*(hgross>0.01);%% the h is not the coefficient for diffusion, it the h in the mass balance eq.
-    Dyy = (DiffS*Ttide/2*(np.abs(Ux*Ux))*(24*3600)^2)*h
+    Dxx = (DiffS*Ttide/2*(np.abs(Ux*Ux))*(24.0*3600.0)**2.0)*h #.*(ho>kro);%.*(hgross>0.01);%% the h is not the coefficient for diffusion, it the h in the mass balance eq.
+    Dyy = (DiffS*Ttide/2*(np.abs(Ux*Ux))*(24.0*3600.0)**2.0)*h
     
     # the factor 24*3600 is used to convert the Ux and Uy from m/s to m/day
     
