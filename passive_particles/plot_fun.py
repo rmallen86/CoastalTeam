@@ -143,3 +143,47 @@ def plot_flood_magnitudes(grid, resample=1):
     plt.title('Flood Tide Velocity Magnitude (m/s)')
     plt.xlabel('Distance (m)')
     plt.ylabel('Distance (m)')
+
+
+def group_plot(gridded_vars):
+    """Set of plots of the gridded variables.
+
+    Inputs :
+        gridded_vars - A gridded_vars object from map_fun.py
+
+    Returns :
+        Draws a figure that can be rendered with plt.show()
+    """
+    # make figure
+    plt.figure()
+    plt.subplot(2, 3, 1)
+    plt.imshow(gridded_vars.ex)
+    plt.colorbar()
+    plt.title('Ebb x')
+
+    plt.subplot(2, 3, 2)
+    plt.imshow(gridded_vars.ey)
+    plt.colorbar()
+    plt.title('Ebb y')
+
+    plt.subplot(2, 3, 3)
+    plt.imshow(np.sqrt(gridded_vars.ex**2+gridded_vars.ey**2))
+    plt.colorbar()
+    plt.title('Ebb Mag')
+
+    plt.subplot(2, 3, 4)
+    plt.imshow(gridded_vars.fx)
+    plt.colorbar()
+    plt.title('Flood x')
+
+    plt.subplot(2, 3, 5)
+    plt.imshow(gridded_vars.fy)
+    plt.colorbar()
+    plt.title('Flood y')
+
+    plt.subplot(2, 3, 6)
+    plt.imshow(np.sqrt(gridded_vars.fx**2+gridded_vars.fy**2))
+    plt.colorbar()
+    plt.title('Flood Mag')
+
+    plt.tight_layout()
