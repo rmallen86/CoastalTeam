@@ -5,6 +5,7 @@ Background
 ==========
 
 Adding capabilities for passive scalar/ sediment modeling to the tidal_flow_calculator, in two fashions.
+
 1) lagrangian transport of passive scalars
 
 This is based on Jay Hariharan's work on scalar transport.  The 'passive particles' notebook demonstrates transport through vegetation patches.
