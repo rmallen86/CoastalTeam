@@ -24,7 +24,7 @@ jobs:
         pip install sphinx-rtd-theme
         pip install ipython
         pip install ipykernel
-        pip intall numpy
+        pip install numpy
         pip install matplotlib
     - name: Build and test documentation
       run: |
