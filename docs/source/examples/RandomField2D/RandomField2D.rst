@@ -2,7 +2,7 @@ Tides on a randomly vegetated field
 -----------------------------------
 
 In this notebook we will be running the
-`Landlab <https://landlab.github.io/#/>`__ tidal-flow-calculator over a
+`Landlab <https://landlab.github.io/>`__ tidal-flow-calculator over a
 randomly generated field of vegetation (simulated by 2 Mannings
 Roughness values) and looking at how passive particle transport is
 impacted by the spatial distribution of plants.
