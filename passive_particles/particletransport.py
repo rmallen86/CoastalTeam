@@ -38,13 +38,14 @@ def init_particles(init_x, init_y, Np_tracer, grid_spacing, gridded_vals):
     return params
 
 
-def tidal_particles(params, tide_period, n_tide_periods):
+def tidal_particles(params, tide_period, n_tide_periods, plot_grid=None):
     """Route the particles in tides.
 
     Inputs :
         params - params output from init_particles()
         tide_period - tidal period in seconds
         n_tide_periods - number of tidal periods to iterate particles over
+        plot_grid - Optional, grid on which to plot the particles (e.g. depth)
 
     Returns :
         walk_data - history of particle locations and travel times
@@ -76,7 +77,11 @@ def tidal_particles(params, tide_period, n_tide_periods):
                                                    target_time=tide_period/2*(i+1))
 
         # plot and save particle locations
-        plot_state(particle.depth, walk_data, -1, None, 'r')
+        if plot_grid is None:
+            plot_state(particle.depth, walk_data, -1, None, 'r')
+        else:
+            plot_state(plot_grid, walk_data, -1, None, 'r')
+
         if i % 2 != 0:
             plt.title('Ebb Tide, Time = ' + str(tide_period/2*(i+1)) + 's')
         else:
