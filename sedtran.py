@@ -39,7 +39,10 @@ def sedtran(d, A, DiffS, h, ho, E, WS, dx, dt, rbulk, co, Ux, Uy, FLX, fTide, Tt
     # DELETE BELOW THIS WHEN FINISHED
 
     mat = spio.loadmat('C:/Users/colli/Documents/Python_Scripts/ESPIn/coastal/MarshMorpho2D/rightbeforeTime.mat')
-    A = mat['A']
+    A_int = mat['A']
+    A = A_int.astype(float)
+    d = np.zeros_like(A) # creates an array of zeros the shape of A (in reality this is an array of floats)
+    d = d.astype(float)
     DiffS = mat['DiffS']
     h = mat['h']
     ho = mat['ho']
@@ -56,15 +59,16 @@ def sedtran(d, A, DiffS, h, ho, E, WS, dx, dt, rbulk, co, Ux, Uy, FLX, fTide, Tt
     Ttide = mat['Ttide']
     # DELETE ABOVE THIS WHEN FINISHED
     
+    # Eliminate the cells in which the water depth is too small
     find_A = np.argwhere(ho<=0)
-    A[find_A] = 0
+    A[find_A[:,0],find_A[:,1]]= 0 # this indexing doesn't quite work
     
     # rivermouthfront
     
     p = np.argwhere(A>0); # exclude the no land cells
     G = 0*d
     NN=len(p)
-    G[p] =[1:NN]
+    G[p[:,0],p[:,1]] = np.arange(1,NN+1)
     rhp = E[p] # in the rhs there is already the addition of the erosion input
     [N, M] = size(G)
     i =(); j=();s=();S=0*G;
