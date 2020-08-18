@@ -10,3 +10,4 @@ Examples using the tidal flood component.
    :maxdepth: 1
 
    example01
+   examplenotebook
