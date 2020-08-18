@@ -14,12 +14,12 @@ def map_velocity_components_to_nodes(grid):
     ebb_vel_x, ebb_vel_y = map_link_vector_components_to_node(grid, grid.at_link['ebb_tide_flow__velocity'])
     flood_vel_x = -ebb_vel_x
     flood_vel_y = -ebb_vel_y
-    ebb_vel = np.sqrt(ebb_vel_x^2 + ebb_vel_y^2)
+    ebb_vel = np.sqrt(ebb_vel_x*ebb_vel_x + ebb_vel_y*ebb_vel_y)
     flood_vel = -ebb_vel
-    return (ebb_vel_x, ebb_vel_y, flood_vel_x, flood_vel_y,ebb_vel, flood_vel)
+    return (ebb_vel_x, ebb_vel_y, flood_vel_x, flood_vel_y, ebb_vel, flood_vel)
 
 def plot_tidal_flow(grid, resample=1):
-    (ebb_x, ebb_y, flood_x, flood_y) = map_velocity_components_to_nodes(grid)
+    (ebb_x, ebb_y, flood_x, flood_y, ebb, flood) = map_velocity_components_to_nodes(grid)
 
     # depth
     plt.figure()
@@ -52,7 +52,7 @@ def plot_tidal_flow(grid, resample=1):
     plt.xlabel('Distance (m)')
     plt.ylabel('Distance (m)')
 
-    ebb_vel_magnitude = np.sqrt(ebb_x * ebb_x + ebb_y * ebb_y)
+    ebb_vel_magnitude = ebb
     plt.figure()
     imshow_grid(grid, ebb_vel_magnitude, cmap='magma', color_for_closed='g')
     plt.title('Ebb Tide Velocity Magnitude (m/s)')
@@ -68,7 +68,7 @@ def plot_tidal_flow(grid, resample=1):
     plt.ylabel('Distance (m)')
 
     plt.figure()
-    flood_vel_magnitude = np.sqrt(flood_x * flood_x + flood_y * flood_y)
+    flood_vel_magnitude = flood
     imshow_grid(grid, flood_vel_magnitude, cmap='magma', color_for_closed='g')
     plt.title('Flood Tide Velocity Magnitude (m/s)')
     plt.xlabel('Distance (m)')
