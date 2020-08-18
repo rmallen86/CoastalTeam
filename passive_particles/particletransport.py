@@ -93,3 +93,5 @@ def tidal_particles(params, tide_period, n_tide_periods, plot_grid=None):
         plt.tight_layout()
         plt.savefig(str(i) + '.png')
         plt.close()
+
+    return walk_data
