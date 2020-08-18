@@ -40,7 +40,7 @@ class gridded_vars:
         self.ey = np.flipud(np.reshape(eb_y, grid.shape))  # ebb y
         self.fx = np.flipud(np.reshape(fl_x, grid.shape))  # flood x
         self.fy = np.flipud(np.reshape(fl_y, grid.shape))  # flood y
-        self.elev = np.reshape(grid.at_node['topographic__elevation'],
-                               grid.shape)
-        self.depth = np.reshape(grid.at_node['mean_water__depth'],
-                                grid.shape)
+        self.elev = np.flipud(np.reshape(grid.at_node['topographic__elevation'],
+                               grid.shape))
+        self.depth = np.flipud(np.reshape(grid.at_node['mean_water__depth'],
+                                grid.shape))
