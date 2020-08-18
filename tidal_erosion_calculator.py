@@ -78,7 +78,7 @@ def map_node2cell_addGrid(grid,var1,var2): #takes a grid, plus the variable you 
     a = grid.map_node_to_cell(var1)
     return grid.add_field(var2, a, at='cell')
     
-def populateGrids(grid,tfc):
+def populateGrids(grid,tfc, tau_cr, tau_crv):
     rate = tfc.calc_tidal_inundation_rate()
     grid.add_field('tidal_innundation_rate',rate,at = 'node',units='m/s')
     map_node2cell_addGrid(grid,rate,'tidal_innundation_rate_cell')
@@ -96,7 +96,7 @@ def populateGrids(grid,tfc):
     dHW = np.maximum(0,topo+msl+tfc._tidal_half_range)
     dHW[topo==999] = 0;
 
-    ftide = np.minimum(1,np.maximum(10^-3, dHW/tidal_range))
+    ftide = np.minimum(1,np.maximum(10^-3, dHW/tfc._tidal_range))
     #ftide[topo==999] = 999
     grid.add_field('hydroperiod',ftide,at='node',units='m')
     grid.add_field('water_depth_at_MHW',dHW,at='node',units='m')
