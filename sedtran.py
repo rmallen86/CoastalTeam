@@ -73,13 +73,15 @@ def sedtran(d, A, DiffS, h, ho, E, WS, dx, dt, rbulk, co, Ux, Uy, FLX, fTide, Tt
     p3 = p2.reshape((86628,1))
     G2[p] = p3
     G = G2.reshape(G_shape,order='F')
-    
-    rhp = E[p] # in the rhs there is already the addition of the erosion input
-    [N, M] = size(G)
-    i =(); j=();s=();S=0*G;
+
+    E2 = E.flatten(order='F')
+    rhs = E2[p] # in the rhs there is already the addition of the erosion input
+    [N, M] = np.shape(G)
+    i =np.empty(0); j=np.empty(0);s=np.empty(0);
+    S=0*G;
     
     # boundary conditions imposed SSC
-    a = np.argwhere(A==2)
+    a = np.argwhere(A.flatten(order='F')==2)
     rhs[G[a]] = co*h[a]*fTide[a]
     
     Dxx = (DiffS*Ttide/2*(np.abs(Ux*Ux))*(24*3600)^2)*h #.*(ho>kro);%.*(hgross>0.01);%% the h is not the coefficient for diffusion, it the h in the mass balance eq.
