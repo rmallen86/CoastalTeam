@@ -1,7 +1,7 @@
 """Plotting functions, adapted from: https://github.com/landlab/landlab/blob/gt/tidal-flow-component/notebooks/tutorials/tidal_flow/tidal_flow_calculator.ipynb"""
 import matplotlib.pyplot as plt
 from landlab import imshow_grid
-from map_fun import map_velocity_components_to_nodes as mvcn
+from . import map_fun as mf
 import numpy as np
 
 
@@ -34,7 +34,7 @@ def plot_ebb_quiver(grid, resample=1):
     Returns :
         Draws a figure that can be rendered with plt.show()
     """
-    (ebb_x, ebb_y, _, _) = mvcn(grid)
+    (ebb_x, ebb_y, _, _) = mf.map_velocity_components_to_nodes(grid)
 
     # down-sample for legible quiver plots if needed
     if resample != 1:
@@ -116,7 +116,7 @@ def plot_ebb_magnitudes(grid, resample=1):
     Returns :
         Draws a figure that can be rendered with plt.show()
     """
-    (ebb_x, ebb_y, _, _) = mvcn(grid)
+    (ebb_x, ebb_y, _, _) = mf.map_velocity_components_to_nodes(grid)
 
     ebb_vel_magnitude = np.sqrt(ebb_x * ebb_x + ebb_y * ebb_y)
     plt.figure()
@@ -136,7 +136,7 @@ def plot_flood_magnitudes(grid, resample=1):
     Returns :
         Draws a figure that can be rendered with plt.show()
     """
-    (_, _, flood_x, flood_y) = mvcn(grid)
+    (_, _, flood_x, flood_y) = mf.map_velocity_components_to_nodes(grid)
     plt.figure()
     flood_vel_magnitude = np.sqrt(flood_x * flood_x + flood_y * flood_y)
     imshow_grid(grid, flood_vel_magnitude, cmap='magma', color_for_closed='g')
