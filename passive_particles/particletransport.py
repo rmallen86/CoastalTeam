@@ -82,9 +82,16 @@ def tidal_particles(params, tide_period, n_tide_periods, plot_grid=None):
         else:
             plot_state(plot_grid, walk_data, -1, None, 'r')
 
+        # set colorbar
+        plt.colorbar()
+
         if i % 2 != 0:
             plt.title('Ebb Tide, Time = ' + str(tide_period/2*(i+1)) + 's')
         else:
             plt.title('Flood Tide, Time = ' + str(tide_period/2*(i+1)) + 's')
+
+        plt.tight_layout()
         plt.savefig(str(i) + '.png')
         plt.close()
+
+    return walk_data
