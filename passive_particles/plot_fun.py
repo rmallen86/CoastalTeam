@@ -1,7 +1,7 @@
 """Plotting functions, adapted from: https://github.com/landlab/landlab/blob/gt/tidal-flow-component/notebooks/tutorials/tidal_flow/tidal_flow_calculator.ipynb"""
 import matplotlib.pyplot as plt
 from landlab import imshow_grid
-from map_fun import map_velocity_components_to_nodes as mvcn
+from . import map_fun as mf
 import numpy as np
 
 
@@ -9,8 +9,11 @@ def plot_depth(grid, resample=1):
     """Plot of water depths.
 
     Inputs :
-        grid - A landlab grid object
-        resample - Downsampling value
+        grid : `obj`
+            A landlab grid object
+
+        resample : `int`
+            Downsampling value
 
     Returns :
         Draws a figure that can be rendered with plt.show()
@@ -28,13 +31,16 @@ def plot_ebb_quiver(grid, resample=1):
     """Quiver plot of ebb velocities.
 
     Inputs :
-        grid - A landlab grid object
-        resample - Downsampling value
+        grid : `obj`
+            A landlab grid object
+
+        resample `int`
+            Downsampling value
 
     Returns :
         Draws a figure that can be rendered with plt.show()
     """
-    (ebb_x, ebb_y, _, _) = mvcn(grid)
+    (ebb_x, ebb_y, _, _) = mf.map_velocity_components_to_nodes(grid)
 
     # down-sample for legible quiver plots if needed
     if resample != 1:
@@ -69,8 +75,11 @@ def plot_flood_quiver(grid, resample=1):
     """Quiver plot of flood velocities.
 
     Inputs :
-        grid - A landlab grid object
-        resample - Downsampling value
+        grid : `obj`
+            A landlab grid object
+
+        resample `int`
+            Downsampling value
 
     Returns :
         Draws a figure that can be rendered with plt.show()
@@ -110,13 +119,16 @@ def plot_ebb_magnitudes(grid, resample=1):
     """Plot of ebb velocities.
 
     Inputs :
-        grid - A landlab grid object
-        resample - Downsampling value
+        grid `obj`
+            A landlab grid object
+
+        resample : `int`
+            Downsampling value
 
     Returns :
         Draws a figure that can be rendered with plt.show()
     """
-    (ebb_x, ebb_y, _, _) = mvcn(grid)
+    (ebb_x, ebb_y, _, _) = mf.map_velocity_components_to_nodes(grid)
 
     ebb_vel_magnitude = np.sqrt(ebb_x * ebb_x + ebb_y * ebb_y)
     plt.figure()
@@ -130,13 +142,16 @@ def plot_flood_magnitudes(grid, resample=1):
     """Plot of flood velocities.
 
     Inputs :
-        grid - A landlab grid object
-        resample - Downsampling value
+        grid : `obj`
+            A landlab grid object
+
+        resample : `int`
+            Downsampling value
 
     Returns :
         Draws a figure that can be rendered with plt.show()
     """
-    (_, _, flood_x, flood_y) = mvcn(grid)
+    (_, _, flood_x, flood_y) = mf.map_velocity_components_to_nodes(grid)
     plt.figure()
     flood_vel_magnitude = np.sqrt(flood_x * flood_x + flood_y * flood_y)
     imshow_grid(grid, flood_vel_magnitude, cmap='magma', color_for_closed='g')
@@ -149,7 +164,8 @@ def group_plot(gridded_vars):
     """Set of plots of the gridded variables.
 
     Inputs :
-        gridded_vars - A gridded_vars object from map_fun.py
+        gridded_vars : `obj`
+            A gridded_vars object from map_fun.py
 
     Returns :
         Draws a figure that can be rendered with plt.show()
