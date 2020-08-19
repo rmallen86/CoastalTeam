@@ -142,6 +142,7 @@ def populateGrids(grid, tfc, tau_cr, tau_crv, veg):
     wd_node = grid.map_min_of_node_links_to_node(wd)
     grid.add_field('water_depth_at_node',wd_node,at='node',clobber=True)
     map_link2cell_addGrid(grid,tfc._water_depth_at_links,'water_depth_at_cell')
+    
 
 def totalsedimenterosion_mudsine(grid, mud_erodability,tr,tcg):
 
@@ -158,8 +159,9 @@ def totalsedimenterosion_mudsine(grid, mud_erodability,tr,tcg):
     
     utide = grid.at_node['flood_tide_flow__velocity_node']*fupeak*np.sin(np.pi/2) #intra-tidal velocity
     rough = grid.at_node['roughness_node']
-    h = grid.at_node['water_depth_at_node']
-
+    #h = grid.at_node['water_depth_at_node']
+    h = grid.at_node['mean_water__depth']
+    
     tauC = 1025*9.81* (rough**2) * (utide**2) * (h**(-1/3))
     E += mud_erodability*(np.sqrt(1+(tauC/taucr)**2)-1)
     
