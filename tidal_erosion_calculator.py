@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 from landlab import RasterModelGrid, imshow_grid
 from landlab.components import TidalFlowCalculator
 from landlab.io import read_esri_ascii
-from landlab.grid.mappers import map_max_of_link_nodes_to_link, map_node_to_cell, map_link_vector_components_to_node, map_max_of_node_links_to_node
+from landlab.grid.mappers import map_mean_of_link_nodes_to_link, map_node_to_cell, map_link_vector_components_to_node, map_min_of_node_links_to_node
 
 
 def map_velocity_components_to_nodes(grid):
@@ -84,7 +84,7 @@ def map_node2cell_addGrid(grid,var1,var2): #takes a grid, plus the variable you 
     return grid.add_field(var2, a, at='cell',clobber=True)
     
 def map_link2cell_addGrid(grid,var1,var2): #takes a grid, plus the variable you want to map to cell, and the string name
-    a = grid.map_max_of_node_links_to_node(var1)
+    a = grid.map_min_of_node_links_to_node(var1)
     b = grid.map_node_to_cell(a)
     return grid.add_field(var2, b, at='cell',clobber=True)
     
@@ -115,31 +115,31 @@ def populateGrids(grid, tfc, tau_cr, tau_crv, veg):
     
     lev_an = -topo-msl #water depth with respect to MSL
     grid.add_field('lev_at_node',lev_an,at = 'node',clobber=True)
-    lev_atlink = grid.map_max_of_link_nodes_to_link('lev_at_node')
+    lev_atlink = grid.map_mean_of_link_nodes_to_link('lev_at_node')
     map_node2cell_addGrid(grid,lev_an,'lev_at_cell')
 
     taucr = grid.add_zeros('tau_cr',at='link') + tau_cr
     v = grid.at_link['veg_atlink'] 
     taucr[v==1] = tau_crv
-    taucr_node = grid.map_max_of_node_links_to_node(taucr)
+    taucr_node = grid.map_min_of_node_links_to_node(taucr)
     grid.add_field('tau_cr_node',taucr_node,at='node',clobber=True)
     map_link2cell_addGrid(grid,taucr,'tau_cr_cell')
     
     ebb = grid.at_link['ebb_tide_flow__velocity']
-    ebb_node = grid.map_max_of_node_links_to_node(ebb)
+    ebb_node = grid.map_min_of_node_links_to_node(ebb)
     grid.add_field('ebb_tide_flow__velocity_node',ebb_node,at='node',clobber=True)
     grid.add_field('flood_tide_flow__velocity_node',-ebb_node,at='node',clobber=True)
     map_node2cell_addGrid(grid,ebb,'ebb_tide_flow__velocity_cell')
     map_node2cell_addGrid(grid,-ebb,'flood_tide_flow__velocity_cell')
     
     rough = grid.at_link['roughness']
-    rough_node = grid.map_max_of_node_links_to_node(rough)
+    rough_node = grid.map_min_of_node_links_to_node(rough)
     grid.add_field('roughness_node',rough_node,at='node',clobber=True)
     map_link2cell_addGrid(grid,rough,'roughness_cell')
     
     grid.add_field('water_depth_at_link',tfc._water_depth_at_links,at = 'link',units='m',clobber=True)
     wd = tfc._water_depth_at_links
-    wd_node = grid.map_max_of_node_links_to_node(wd)
+    wd_node = grid.map_min_of_node_links_to_node(wd)
     grid.add_field('water_depth_at_node',wd_node,at='node',clobber=True)
     map_link2cell_addGrid(grid,tfc._water_depth_at_links,'water_depth_at_cell')
 
@@ -160,7 +160,7 @@ def totalsedimenterosion_mudsine(grid, mud_erodability,tr,tcg):
     rough = grid.at_node['roughness_node']
     h = grid.at_node['water_depth_at_node']
 
-    tauC = 2650*9.81* (rough**2) * (utide**2) * (h**(-1/3))
+    tauC = 1025*9.81* (rough**2) * (utide**2) * (h**(-1/3))
     E += mud_erodability*(np.sqrt(1+(tauC/taucr)**2)-1)
     
     grid.add_field('erosion',E,at='node',clobber=True)
@@ -186,17 +186,17 @@ def totalsedimenterosion_mudsine_link(grid, mud_erodability):
 
 def updategrids(grid, tfc): #need to update grids used in totalsedimenterosion_mudsine that were changed by tidal_flow_calculator
     ebb = grid.at_link['ebb_tide_flow__velocity']
-    ebb_node = grid.map_max_of_node_links_to_node(ebb)
+    ebb_node = grid.map_min_of_node_links_to_node(ebb)
     grid.add_field('ebb_tide_flow__velocity_node',ebb_node,at='node',clobber=True)
     grid.add_field('flood_tide_flow__velocity_node',-ebb_node,at='node',clobber=True)
     
     rough = grid.at_link['roughness']
-    rough_node = grid.map_max_of_node_links_to_node(rough)
+    rough_node = grid.map_min_of_node_links_to_node(rough)
     grid.add_field('roughness_node',rough_node,at='node',clobber=True)
     
     grid.add_field('water_depth_at_link',tfc._water_depth_at_links,at = 'link',units='m',clobber=True)
     wd = tfc._water_depth_at_links
-    wd_node = grid.map_max_of_node_links_to_node(wd)
+    wd_node = grid.map_min_of_node_links_to_node(wd)
     grid.add_field('water_depth_at_node',wd_node,at='node',clobber=True)
     
     msl = tfc._mean_sea_level
