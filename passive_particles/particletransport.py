@@ -8,14 +8,24 @@ def init_particles(init_x, init_y, Np_tracer, grid_spacing, gridded_vals):
     """Initialize the particles.
 
     Inputs :
-        init_x - List of starting x locations for the particles
-        init_y - List of starting y locations for the particles
-        Np_tracer - Number of particles to route
-        grid_spacing - Size of the raster grid cells
-        gridded_vals - gridded_vals object from map_fun.py
+        init_x : `list`
+            List of starting x locations for the particles
+
+        init_y : `list`
+            List of starting y locations for the particles
+
+        Np_tracer : `int`
+            Number of particles to route
+
+        grid_spacing : `int`
+            Size of the raster grid cells
+
+        gridded_vals : `obj`
+            gridded_vals object from map_fun.py
 
     Outputs :
-        params - an initialized params class
+        params : `obj`
+            an initialized params class
 
     """
     # create class
@@ -42,13 +52,21 @@ def tidal_particles(params, tide_period, n_tide_periods, plot_grid=None):
     """Route the particles in tides.
 
     Inputs :
-        params - params output from init_particles()
-        tide_period - tidal period in seconds
-        n_tide_periods - number of tidal periods to iterate particles over
-        plot_grid - Optional, grid on which to plot the particles (e.g. depth)
+        params : `obj`
+            params output from init_particles()
+
+        tide_period : `int`
+            tidal period in seconds
+
+        n_tide_periods : 'int'
+            number of tidal periods to iterate particles over
+
+        plot_grid : `numpy.ndarray` (Optional)
+            grid on which to plot the particles (e.g. depth)
 
     Returns :
-        walk_data - history of particle locations and travel times
+        walk_data : `list`
+            history of particle locations and travel times
 
         Also saves image of particle locations to disk for each flood/ebb tide.
 
