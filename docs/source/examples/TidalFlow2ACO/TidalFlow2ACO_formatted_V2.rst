@@ -316,3 +316,19 @@ Plot final water depths
 .. image:: output_38_3.png
 
 
+Questions to think about
+========================
+
+1. Now you can see where there is high erosion occuring - why might this
+   spot have erosion? What might change the pattern and location of
+   erosion?
+
+2. What variables can you change or play with to produce a different
+   response in this landscape?
+
+3. What are key things missing from this model? What are we not
+   modeling?
+
+4. looking at the percent change in water level is helpful. How can you
+   look at percent change of elevation or flood velocities in the
+   landscape? What code would need to be added?
