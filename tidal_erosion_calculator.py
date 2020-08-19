@@ -151,17 +151,16 @@ def totalsedimenterosion_mudsine(grid, mud_erodability,tr,tcg):
     taucr = grid.at_node['tau_cr_node']
     E = np.zeros(taucr.size)
     
-    lev = grid.at_node['lev_at_node']
-    xi = -lev-tr/2
-    xi[xi<0] = 0
-    taucr += xi*tcg
+    # lev = grid.at_node['lev_at_node']
+    # xi = -lev-tr/2
+    # xi[xi<0] = 0
+    # taucr += xi*tcg
     
     utide = grid.at_node['flood_tide_flow__velocity_node']*fupeak*np.sin(np.pi/2) #intra-tidal velocity
     rough = grid.at_node['roughness_node']
     h = grid.at_node['water_depth_at_node']
- 
-    
-    tauC = 1030*9.81* (rough**2) * (utide**2) * (h**(-1/3))
+
+    tauC = 2650*9.81* (rough**2) * (utide**2) * (h**(-1/3))
     E += mud_erodability*(np.sqrt(1+(tauC/taucr)**2)-1)
     
     grid.add_field('erosion',E,at='node',clobber=True)
