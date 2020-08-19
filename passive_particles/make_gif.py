@@ -8,7 +8,7 @@ except Exception:
 
 # first make the gif - set range based on number of output images
 images = []
-for i in range(0, 100):
+for i in range(0, 30):
     fname = str(i) + '.png'
     images.append(imageio.imread(fname))
 
