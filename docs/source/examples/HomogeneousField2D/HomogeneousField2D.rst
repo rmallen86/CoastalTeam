@@ -2,7 +2,7 @@ Tides on a simple 2D field
 --------------------------
 
 In this notebook we will be running the
-`Landlab <http://landlab.github.io/#/>`__ tidal-flow-calculator over a
+`Landlab <http://landlab.github.io/>`__ tidal-flow-calculator over a
 simple 2D field of constant depth and roughness. The domain used is a
 modified version of one of the examples from `this
 notebook <https://github.com/landlab/landlab/blob/gt/tidal-flow-component/notebooks/tutorials/tidal_flow/tidal_flow_calculator.ipynb>`__.
