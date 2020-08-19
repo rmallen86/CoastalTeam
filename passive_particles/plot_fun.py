@@ -1,7 +1,10 @@
 """Plotting functions, adapted from: https://github.com/landlab/landlab/blob/gt/tidal-flow-component/notebooks/tutorials/tidal_flow/tidal_flow_calculator.ipynb"""
 import matplotlib.pyplot as plt
 from landlab import imshow_grid
-from . import map_fun as mf
+try:
+    from . import map_fun as mf
+except:
+    import map_fun as mf
 import numpy as np
 
 
