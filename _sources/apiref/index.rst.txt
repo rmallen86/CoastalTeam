@@ -4,6 +4,9 @@
 API Reference
 =============
 
-.. automodule:: sedtran
-   :members:
-   :special-members:
+.. toctree::
+   :maxdepth: 2
+   :caption: Functions
+
+   erosion
+   particles

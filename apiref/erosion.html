@@ -7,7 +7,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Background &mdash; ESPIn2020 1.0.0 documentation</title>
+  <title>Functions for Erosion &mdash; ESPIn2020 1.0.0 documentation</title>
   
 
   
@@ -36,8 +36,8 @@
     
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Examples" href="../examples/index.html" />
-    <link rel="prev" title="CoastalTeam" href="../index.html" /> 
+    <link rel="next" title="Functions for Passive Particles" href="particles.html" />
+    <link rel="prev" title="API Reference" href="index.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -87,12 +87,13 @@
             
             
               <ul class="current">
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Background</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#references">References</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../background/index.html">Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Functions for Erosion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="particles.html">Functions for Passive Particles</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="../examples/index.html">Examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../apiref/index.html">API Reference</a></li>
 </ul>
 
             
@@ -139,13 +140,15 @@
     
       <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
         
-      <li>Background</li>
+          <li><a href="index.html">API Reference</a> &raquo;</li>
+        
+      <li>Functions for Erosion</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="../_sources/background/index.rst.txt" rel="nofollow"> View page source</a>
+            <a href="../_sources/apiref/erosion.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -158,23 +161,18 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="background">
-<span id="id1"></span><h1>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h1>
-<p>The CoastalTeam worked with the tidal flow calculator (available <a class="reference external" href="https://github.com/landlab/landlab/tree/gt/tidal-flow-component">here</a> as of 8/19/2020).</p>
-<p>The tidal flow calculator is based on the work of Mariotti and Murshid (2018) <a class="footnote-reference brackets" href="#id4" id="id2">1</a> and has been partially integrated into <a class="reference external" href="http://landlab.github.io/">Landlab</a>. In this project, our group had the following 2 objects:</p>
-<ol class="arabic simple">
-<li><p>Add sediment erosion and sediment transport capabilities to the <a class="reference external" href="http://landlab.github.io/">Landlab</a> tidal flow calculator.</p></li>
-<li><p>Couple with a lagrangian particle router (<a class="reference external" href="https://passah2o.github.io/dorado/">dorado</a>).</p></li>
-</ol>
-<p>To help make the work we have done more accessible, we have organized our workflows into jupyter notebooks. These notebooks can be viewed as rendered HTMLs in our documentation (<a class="reference internal" href="../examples/index.html#examples"><span class="std std-ref">Examples</span></a>), or they can be downloaded from our <a class="reference external" href="https://github.com/espin-2020/CoastalTeam">repository</a>.</p>
-<div class="section" id="references">
-<h2>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h2>
-<dl class="footnote brackets">
-<dt class="label" id="id4"><span class="brackets"><a class="fn-backref" href="#id2">1</a></span></dt>
-<dd><p>Mariotti, G.; Murshid, S. A 2D Tide-Averaged Model for the Long-Term Evolution of an Idealized Tidal Basin-Inlet-Delta System. J. Mar. Sci. Eng. 2018, 6, 154.</p>
-</dd>
-</dl>
-</div>
+  <div class="section" id="module-tidal_erosion_calculator">
+<span id="functions-for-erosion"></span><span id="erosion"></span><h1>Functions for Erosion<a class="headerlink" href="#module-tidal_erosion_calculator" title="Permalink to this headline">¶</a></h1>
+<p>Total sediment erosion (assumes limitless supply)
+Based on totalsedimenterosionmudsine.m by Giulio Mariotti 
+Includes some code based on G. Tucker tidal_flow_calculator.py in landlab component
+Does not incorporate averaging over multiple tidal cycles or linear increase in critical shear stress with depth</p>
+<dl class="function">
+<dt id="tidal_erosion_calculator.map_velocity_components_to_nodes">
+<code class="descclassname">tidal_erosion_calculator.</code><code class="descname">map_velocity_components_to_nodes</code><span class="sig-paren">(</span><em>grid</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/tidal_erosion_calculator.html#map_velocity_components_to_nodes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#tidal_erosion_calculator.map_velocity_components_to_nodes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Map the velocity components from the links to the nodes, and return the node arrays.</p>
+</dd></dl>
+
 </div>
 
 
@@ -185,10 +183,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="../examples/index.html" class="btn btn-neutral float-right" title="Examples" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="particles.html" class="btn btn-neutral float-right" title="Functions for Passive Particles" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="../index.html" class="btn btn-neutral float-left" title="CoastalTeam" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="index.html" class="btn btn-neutral float-left" title="API Reference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
