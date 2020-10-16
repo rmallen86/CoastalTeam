@@ -29,7 +29,7 @@ def init_particles(init_x, init_y, Np_tracer, grid_spacing, gridded_vals):
 
     """
     # create class
-    params = pt.params()
+    params = pt.modelParams()
     # populate with required parameters
     params.seed_xloc = init_y
     params.seed_yloc = init_x
@@ -72,7 +72,11 @@ def tidal_particles(params, tide_period, n_tide_periods, plot_grid=None):
 
     """
     # define the particle
-    particle = pt.Particle(params)
+    particle = pt.Particles(params)
+    # generate a set of particles to route around
+    particle.generate_particles(params.Np_tracer,
+                                params.seed_xloc,
+                                params.seed_yloc)
     # record each 1/2 tidal cycle so each ebb and flood
     for i in range(0, int(2*n_tide_periods)):
         if i == 0:
@@ -83,16 +87,18 @@ def tidal_particles(params, tide_period, n_tide_periods, plot_grid=None):
                 # ebb tide
                 params.u = params.ex
                 params.v = params.ey
-                particle = pt.Particle(params)
-                walk_data = particle.run_iteration(previous_walk_data=walk_data,
-                                                   target_time=tide_period/2*(i+1))
+                particle = pt.Particles(params)
+                particle.generate_particles(0, [], [],
+                                            previous_walk_data=walk_data)
+                walk_data = particle.run_iteration(target_time=tide_period/2*(i+1))
             else:
                 # flood tide
                 params.u = params.fx
                 params.v = params.fy
-                particle = pt.Particle(params)
-                walk_data = particle.run_iteration(previous_walk_data=walk_data,
-                                                   target_time=tide_period/2*(i+1))
+                particle = pt.Particles(params)
+                particle.generate_particles(0, [], [],
+                                            previous_walk_data=walk_data)
+                walk_data = particle.run_iteration(target_time=tide_period/2*(i+1))
 
         # plot and save particle locations
         if plot_grid is None:
