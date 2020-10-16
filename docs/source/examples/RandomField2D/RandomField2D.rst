@@ -38,8 +38,7 @@ model for random field generation.
 Lastly, to simulate passive particle transport we will use the
 Lagrangian-based transport model
 `dorado <https://passah2o.github.io/dorado/>`__. To install dorado we
-can type ``pip install pydorado==1.0.0`` from the command line (note:
-we are using version 1.0.0).
+can type ``pip install pydorado`` from the command line.
 
 .. code:: ipython3
 

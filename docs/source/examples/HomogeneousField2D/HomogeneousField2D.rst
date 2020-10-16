@@ -30,8 +30,8 @@ tidal-flow-calculator.
 
 To simulate passive particle transport we will use the Lagrangian-based
 transport model `dorado <https://github.com/passaH2O/dorado>`__. We can
-install dorado by typing ``pip install pydorado==1.0.0`` from the command
-line (note: we are using version 1.0.0).
+install dorado by typing ``pip install pydorado`` from the command
+line.
 
 .. code:: ipython3
 
